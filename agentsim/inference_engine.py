@@ -52,18 +52,24 @@ class InferenceEngine:
     
     def __init__(self):
         """Initialize the InferenceEngine (only once)."""
-        if self._initialized:
+        # Check initialization status under lock for thread safety
+        if hasattr(self, '_initialized') and self._initialized:
             return
-            
-        self._initialized = True
-        self._inference_lock = threading.Lock()
-        self._model = None
-        self._device = None
-        self._request_count = 0
         
-        # Mock initialization - in a real implementation, this would
-        # initialize the actual GPU model
-        self._initialize_model()
+        with self._lock:
+            # Double-check after acquiring lock
+            if hasattr(self, '_initialized') and self._initialized:
+                return
+                
+            self._initialized = True
+            self._inference_lock = threading.Lock()
+            self._model = None
+            self._device = None
+            self._request_count = 0
+            
+            # Mock initialization - in a real implementation, this would
+            # initialize the actual GPU model
+            self._initialize_model()
     
     def _initialize_model(self):
         """
