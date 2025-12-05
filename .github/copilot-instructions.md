@@ -104,8 +104,17 @@ class InferenceEngine:
             with cls._lock:
                 if cls._instance is None:
                     cls._instance = super().__new__(cls)
-                    cls._instance._initialized = False
         return cls._instance
+    
+    def __init__(self):
+        # Check if already initialized
+        if hasattr(self, '_initialized') and self._initialized:
+            return
+        with self._lock:
+            if hasattr(self, '_initialized') and self._initialized:
+                return
+            self._initialized = True
+            # Initialize model here...
 ```
 
 **Important**: Always use double-check locking for thread safety.
@@ -267,12 +276,16 @@ class InferenceEngine:
 ```
 
 ```python
-# GOOD - maintains singleton
+# GOOD - maintains thread-safe singleton
 class InferenceEngine:
     _instance = None
+    _lock = threading.Lock()
+    
     def __new__(cls):
         if cls._instance is None:
-            cls._instance = super().__new__(cls)
+            with cls._lock:
+                if cls._instance is None:
+                    cls._instance = super().__new__(cls)
         return cls._instance
 ```
 
