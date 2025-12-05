@@ -362,9 +362,9 @@ def _initialize_model(self):
 ## Questions or Issues?
 
 If you're unsure about:
-- Design decisions → Check this file and architecture section
-- Code patterns → Look at existing code in the same module
-- Testing approach → Check similar tests in `tests/` directory
-- Thread safety → Review `InferenceEngine` singleton implementation
+- Design decisions: Check this file and architecture section
+- Code patterns: Look at existing code in the same module
+- Testing approach: Check similar tests in `tests/` directory
+- Thread safety: Review `InferenceEngine` singleton implementation
 
 For major changes, consider discussing the approach before implementation.
