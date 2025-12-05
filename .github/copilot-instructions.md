@@ -104,6 +104,7 @@ class InferenceEngine:
             with cls._lock:
                 if cls._instance is None:
                     cls._instance = super().__new__(cls)
+                    cls._instance._initialized = False
         return cls._instance
     
     def __init__(self):
@@ -117,7 +118,7 @@ class InferenceEngine:
             # Initialize model here...
 ```
 
-**Important**: Always use double-check locking for thread safety.
+**Critical**: Always use double-check locking for thread safety.
 
 ### 2. Private Memory Isolation (Agent)
 
@@ -146,7 +147,7 @@ self._public_dialogue: List[Message] = []
 response = agent.process_turn(self._public_dialogue)
 ```
 
-**Important**: Public dialogue is shared, but agent internal state remains isolated.
+**Critical**: Public dialogue is shared, but agent internal state remains isolated.
 
 ### 4. Serial Processing
 
@@ -276,16 +277,17 @@ class InferenceEngine:
 ```
 
 ```python
-# GOOD - maintains thread-safe singleton
+# GOOD - maintains thread-safe singleton with type hints
 class InferenceEngine:
-    _instance = None
-    _lock = threading.Lock()
+    _instance: Optional['InferenceEngine'] = None
+    _lock: threading.Lock = threading.Lock()
     
     def __new__(cls):
         if cls._instance is None:
             with cls._lock:
                 if cls._instance is None:
                     cls._instance = super().__new__(cls)
+                    cls._instance._initialized = False
         return cls._instance
 ```
 
