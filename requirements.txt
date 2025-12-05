@@ -1,0 +1,15 @@
+# AgentSim - Multi-Agent Framework Requirements
+
+# Core dependencies (minimal for the framework)
+# Note: In a real implementation with GPU inference, you would include:
+# - torch>=2.0.0
+# - transformers>=4.30.0
+# - accelerate>=0.20.0
+# or similar packages for your specific inference backend
+
+# For testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# For type checking (optional but recommended)
+mypy>=1.4.0
